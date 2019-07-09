@@ -1,0 +1,10 @@
+host: https://dev.cargo.io
+auth:
+  user: admin
+  password: Pwd123456
+policy:
+  includePublic: true
+  numberPolicy:
+    number: 1
+  retainTags:
+    - 1.30.2
