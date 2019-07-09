@@ -25,8 +25,6 @@ func main() {
 		flag.Parse()
 	}
 
-	fmt.Println(*configFile)
-
 	err := config.Load(*configFile)
 	if err != nil {
 		logrus.Fatalf("Load config failed: %v", err)
@@ -51,7 +49,7 @@ func main() {
 		for _, repo := range images {
 			for _, tag := range repo.Tags {
 				imageCount++
-				fmt.Printf("%s/%s:%s\n", repo.Project, repo.Repo, tag.Name)
+				fmt.Printf("[%s] %s/%s:%s\n", tag.Created.Format("2006-01-02 15:04:05"), repo.Project, repo.Repo, tag.Name)
 			}
 		}
 		fmt.Printf("Total %d repos with %d images are ready for clean\n", len(images), imageCount)

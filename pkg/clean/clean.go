@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path"
 	"sync"
+	"time"
 
 	"github.com/goharbor/harbor/src/common/utils"
 	"github.com/sirupsen/logrus"
@@ -72,8 +73,9 @@ func (c *policyClean) DryRun() ([]*RepoImages, error) {
 }
 
 type Tag struct {
-	Name   string `json:"name"`
-	Digest string `json:"digest"`
+	Name    string    `json:"name"`
+	Digest  string    `json:"digest"`
+	Created time.Time `json:"created"`
 }
 type RepoImages struct {
 	Project string `json:"project"`
@@ -178,8 +180,9 @@ func (c *policyClean) listImages() ([]*RepoImages, error) {
 			var tagsInfo []Tag
 			for _, tag := range tags {
 				tagsInfo = append(tagsInfo, Tag{
-					Name:   tag.Name,
-					Digest: tag.Digest,
+					Name:    tag.Name,
+					Digest:  tag.Digest,
+					Created: tag.Created,
 				})
 			}
 
