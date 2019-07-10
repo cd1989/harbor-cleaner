@@ -29,9 +29,10 @@ type policyClean struct {
 
 func NewPolicyCleaner(client *harbor.Client, projects []string, policy *config.Policy) ImageCleaner {
 	return &policyClean{
-		client: client,
-		policy: policy,
-		lock:   &sync.Mutex{},
+		client:   client,
+		policy:   policy,
+		projects: projects,
+		lock:     &sync.Mutex{},
 	}
 }
 
@@ -164,6 +165,7 @@ func (c *policyClean) listImages() ([]*RepoImages, error) {
 
 	var results []*RepoImages
 	for _, pinfo := range projects {
+		logrus.Infof("Start to collect images for project '%s'", pinfo.Name)
 		repos, err := c.client.ListAllRepositories(pinfo.ProjectID)
 		if err != nil {
 			return nil, fmt.Errorf("list repos for project '%s' error: %v", pinfo.Name, err)

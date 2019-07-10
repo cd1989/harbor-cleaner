@@ -47,6 +47,8 @@ host: https://dev.cargo.io
 auth:
   user: admin
   password: Pwd123456
+projects:
+  - projectA
 policy:
   includePublic: true
   numberPolicy:
@@ -54,6 +56,9 @@ policy:
   retainTags:
     - v1.0
 ```
+
+- `projects` defines which projects to clean images for, if want to clean all projects, make it empty by remove it from configure file.
+- `retainTags` defines tags that must be kept, `?`, `*` supported. For example, `v1.*`. Remove this configure if you don't want to use it.
 
 ### DryRun
 
