@@ -3,6 +3,9 @@ package config
 import (
 	"io/ioutil"
 
+	"fmt"
+	"strings"
+
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
@@ -27,6 +30,7 @@ type Policy struct {
 
 type C struct {
 	Host     string   `yaml:"host"`
+	Version  string   `yaml:"version"`
 	Auth     Auth     `yaml:"auth"`
 	Projects []string `yaml:"projects"`
 	Policy   Policy   `yaml:"policy"`
@@ -47,5 +51,19 @@ func Load(configFile string) error {
 		return err
 	}
 
+	if err = Normalize(&Config); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func Normalize(c *C) error {
+	trimed := strings.TrimSpace(c.Version)
+	if len(trimed) < 3 {
+		return fmt.Errorf("unrecoganized version %s, please provide version like 1.4, 1.7.5", c.Version)
+	}
+
+	c.Version = trimed[:3]
 	return nil
 }
