@@ -43,20 +43,26 @@ $ docker pull k8sdevops/harbor-cleaner:v0.0.3
 ### Configure
 
 ```yaml
+# Host of the Harbor
 host: https://dev.cargo.io
+# Version of the Harbor, e.g. 1.7, 1.4.0
 version: 1.7
+# Admin account
 auth:
   user: admin
   password: Pwd123456
+# Projects list to clean images for, it you want to clean images for all
+# projects, leave it empty.
 projects: []
-policy:
+# Policy to clean images
+policies:
+  # Number policy: to retain the latest N tags for each repo
   numberPolicy:
     number: 5
+  # Tags that should be retained anyway, '?', '*' supported.
   retainTags: []
-```
 
-- `projects` defines which projects to clean images for, if want to clean all projects, make it empty by remove it from configure file.
-- `retainTags` defines tags that must be kept, `?`, `*` supported. For example, `v1.*`. Remove this configure if you don't want to use it.
+```
 
 ### DryRun
 
