@@ -1,6 +1,6 @@
 package harbor
 
-type TagsSortByDateDes []*HarborTag
+type TagsSortByDateDes []*Tag
 
 func (r TagsSortByDateDes) Len() int {
 	return len(r)
