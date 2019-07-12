@@ -136,23 +136,23 @@ func (c *policyClean) imagesToCleanByTouchTime() ([]*RepoImages, error) {
 }
 
 func (c *policyClean) listImages() ([]*RepoImages, error) {
-	public := ""
+	public := "false"
 	if c.policy.IncludePublic {
-		public = "true"
+		public = ""
 	}
-	_, projects, err := c.client.ListProjects(1, 9999, "", public)
+	projects, err := c.client.AllProjects("", public)
 	if err != nil {
 		logrus.Errorf("List projects error: %v", err)
 		return nil, err
 	}
 
 	if len(c.projects) != 0 {
-		projectsMap := make(map[string]*harbor.HarborProject)
+		projectsMap := make(map[string]*harbor.Project)
 		for _, p := range projects {
 			projectsMap[p.Name] = p
 		}
 
-		var configuredProjects []*harbor.HarborProject
+		var configuredProjects []*harbor.Project
 		for _, p := range c.projects {
 			if pinfo, ok := projectsMap[p]; ok {
 				configuredProjects = append(configuredProjects, pinfo)
