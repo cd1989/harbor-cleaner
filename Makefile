@@ -2,7 +2,7 @@
 SHELL := /bin/bash
 
 # Current version of the project.x`
-VERSION ?= v0.0.1
+VERSION ?= v0.0.3
 
 # This repo's root import path (under GOPATH).
 ROOT := github.com/cd1989/harbor-cleaner
@@ -60,7 +60,7 @@ build:
 	        $(CMD_DIR);
 
 image: build
-	docker build -t harbor-cleaner:$(VERSION) -f ./build/Dockerfile .
+	docker build -t k8sdevops/harbor-cleaner:$(VERSION) -f ./build/Dockerfile .
 
 .PHONY: clean
 clean:
