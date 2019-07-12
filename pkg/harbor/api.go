@@ -74,8 +74,11 @@ func TagVulnerabilityPath(project, repo, tag string) string {
 	return fmt.Sprintf(APIVulnerability, project, repo, tag)
 }
 
-func LoginUrl(host, user, pwd string) string {
-	return fmt.Sprintf("%s/c/login?principal=%s&password=%s", host, user, pwd)
+func LoginUrl(host, version, user, pwd string) string {
+	if version >= "1.7" {
+		return fmt.Sprintf("%s/c/login?principal=%s&password=%s", host, user, pwd)
+	}
+	return fmt.Sprintf("%s/login?principal=%s&password=%s", host, user, pwd)
 }
 
 func LogsPath(startTime, endTime int64, op string) string {

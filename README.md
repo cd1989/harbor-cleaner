@@ -26,7 +26,7 @@ To retain only latest 3 tags, tags `v0.2.1`, `v0.1` will be deleted. But as `v0.
 - v0.2.2 (Digest B)
 - v0.2.1 (Digest B)
 
-## Quick Start 
+## How To Use
 
 ### Get Image
 
@@ -37,13 +37,14 @@ $ make image
 You can also pull one from registry.
 
 ```bash
-$ docker pull k8sdevops/harbor-cleaner:v0.0.1
+$ docker pull k8sdevops/harbor-cleaner:v0.0.3
 ```
 
 ### Configure
 
 ```yaml
 host: https://dev.cargo.io
+version: 1.7
 auth:
   user: admin
   password: Pwd123456
@@ -65,7 +66,7 @@ policy:
 ```bash
 $ docker run -it --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:v0.0.1 --dryrun=true
+    harbor-cleaner:v0.0.3 --dryrun=true
 ```
 
 ### Clean
@@ -73,5 +74,15 @@ $ docker run -it --rm \
 ```bash
 $ docker run -it --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:v0.0.1
+    harbor-cleaner:v0.0.3
 ```
+
+# Supported Version
+
+- 1.4.x
+- 1.5.x
+- 1.6.x
+- 1.7.x
+- 1.8.x
+
+It may work for other versions, but this is not tested.

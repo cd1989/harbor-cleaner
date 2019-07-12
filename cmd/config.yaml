@@ -1,4 +1,5 @@
-host: https://devops.cargo.io
+host: https://192.168.8.254
+version: 1.4
 auth:
   user: admin
   password: Pwd123456

@@ -119,7 +119,7 @@ func (c *Client) refreshLoop(closing <-chan struct{}) {
 }
 
 func LoginAndGetCookies(client *http.Client, conf *config.C) ([]*http.Cookie, error) {
-	url := LoginUrl(conf.Host, conf.Auth.User, conf.Auth.Password)
+	url := LoginUrl(conf.Host, conf.Version, conf.Auth.User, conf.Auth.Password)
 	req, err := http.NewRequest(http.MethodPost, url, nil)
 	if err != nil {
 		logrus.Error(err)
