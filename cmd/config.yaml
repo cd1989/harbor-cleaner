@@ -1,14 +1,11 @@
-host: https://192.168.8.254
-version: 1.4
+host: https://dev.cargo.io
+version: 1.7
 auth:
   user: admin
   password: Pwd123456
-projects:
-  - release
-  - library
+projects: []
 policy:
   includePublic: true
   numberPolicy:
-    number: 1
-  retainTags:
-    - 1.30.2
+    number: 5
+  retainTags: []
