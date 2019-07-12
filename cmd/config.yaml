@@ -1,11 +1,18 @@
+# Host of the Harbor
 host: https://dev.cargo.io
+# Version of the Harbor, e.g. 1.7, 1.4.0
 version: 1.7
+# Admin account
 auth:
   user: admin
   password: Pwd123456
+# Projects list to clean images for, it you want to clean images for all
+# projects, leave it empty.
 projects: []
-policy:
-  includePublic: true
+# Policy to clean images
+policies:
+  # Number policy: to retain the latest N tags for each repo
   numberPolicy:
     number: 5
+  # Tags that should be retained anyway, '?', '*' supported.
   retainTags: []

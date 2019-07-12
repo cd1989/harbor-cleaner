@@ -136,11 +136,7 @@ func (c *policyClean) imagesToCleanByTouchTime() ([]*RepoImages, error) {
 }
 
 func (c *policyClean) listImages() ([]*RepoImages, error) {
-	public := "false"
-	if c.policy.IncludePublic {
-		public = ""
-	}
-	projects, err := c.client.AllProjects("", public)
+	projects, err := c.client.AllProjects("", "")
 	if err != nil {
 		logrus.Errorf("List projects error: %v", err)
 		return nil, err

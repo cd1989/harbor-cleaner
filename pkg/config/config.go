@@ -20,8 +20,6 @@ type NumPolicy struct {
 }
 
 type Policy struct {
-	// IncludePublic indicates whether to clean public projects
-	IncludePublic bool `yaml:"includePublic"`
 	// RetainNum configure policy to retain given number tags in repo
 	NumPolicy *NumPolicy `yaml:"numberPolicy,omitempty"`
 	// RetainTags is tag patterns to be retained
@@ -33,7 +31,7 @@ type C struct {
 	Version  string   `yaml:"version"`
 	Auth     Auth     `yaml:"auth"`
 	Projects []string `yaml:"projects"`
-	Policy   Policy   `yaml:"policy"`
+	Policy   Policy   `yaml:"policies"`
 }
 
 var Config = C{}

@@ -48,14 +48,11 @@ version: 1.7
 auth:
   user: admin
   password: Pwd123456
-projects:
-  - projectA
+projects: []
 policy:
-  includePublic: true
   numberPolicy:
     number: 5
-  retainTags:
-    - v1.0
+  retainTags: []
 ```
 
 - `projects` defines which projects to clean images for, if want to clean all projects, make it empty by remove it from configure file.
