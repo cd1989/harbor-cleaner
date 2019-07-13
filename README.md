@@ -1,40 +1,27 @@
 # Harbor Cleaner
 Clean images in Harbor by policies.
 
+## Features
+
+- **Delete tags without side effects** As we known when we delete a tag from a repo in docker registry, the underneath manifest is deleted, so are other tags what share the same manifests.
+- **Delete by policies** Support delete tags by configurable policies
+- **Dry run before actual cleanup** To see what would be cleaned up before performing real cleanup.
+
 ## Policies
 
 ### Tag Number Policy
 
 Tag number policy specifies how many tags to retain for each repo, and clean other old tags.
 
-Note when delete a tag, Docker will delete by underneath digest ID actually. So if in the same repository, there are other tags that share the same image digest (that's to say, images given by these tags are the same), they will also be deleted.
-
-In this cleaner, this situation is considered, when to delete a tag, if it will affect tags that should be retained, then the tag will also be retained.
-
-For example, if the policy wants to retain 3 tag per repository, but there is a repository with following tags:
-
-- v0.4   (Digest D)
-- v0.3   (Digest C)
-- v0.2.2 (Digest B)
-- v0.2.1 (Digest B)
-- v0.1   (Digest A)
-
-To retain only latest 3 tags, tags `v0.2.1`, `v0.1` will be deleted. But as `v0.2.2` has same digest ID to `v0.2.1`, `v0.2.2` will also be deleted if we are to delete `v0.2.1`. So finally, `v0.2.1` will be kept, resulting in following tags:
-
-- v0.4   (Digest D)
-- v0.3   (Digest C)
-- v0.2.2 (Digest B)
-- v0.2.1 (Digest B)
-
 ## How To Use
 
 ### Get Image
 
 ```bash
-$ make image
+$ make image VERSION=latest
 ```
 
-You can also pull one from registry.
+You can also pull one from DockerHub.
 
 ```bash
 $ docker pull k8sdevops/harbor-cleaner:v0.0.3
@@ -69,7 +56,7 @@ policies:
 ```bash
 $ docker run -it --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:v0.0.3 --dryrun=true
+    harbor-cleaner:latest --dryrun=true
 ```
 
 ### Clean
@@ -77,7 +64,7 @@ $ docker run -it --rm \
 ```bash
 $ docker run -it --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:v0.0.3
+    harbor-cleaner:latest
 ```
 
 # Supported Version
