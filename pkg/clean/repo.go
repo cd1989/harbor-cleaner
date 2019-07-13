@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/cd1989/harbor-cleaner/pkg/harbor"
 	"github.com/docker/distribution/manifest/schema1"
 	"github.com/sirupsen/logrus"
+
+	"github.com/cd1989/harbor-cleaner/pkg/harbor"
 )
 
 type RepoCleaner struct {

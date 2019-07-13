@@ -1,17 +1,18 @@
 # Harbor Cleaner
+
 Clean images in Harbor by policies.
 
 ## Features
 
-- **Delete tags without side effects** As we known when we delete a tag from a repo in docker registry, the underneath manifest is deleted, so are other tags what share the same manifests.
+- **Delete tags without side effects** As we known when we delete a tag from a repo in docker registry, the underneath manifest is deleted, so are other tags what share the same manifest. In this tool, we protect tags from such situation.
 - **Delete by policies** Support delete tags by configurable policies
 - **Dry run before actual cleanup** To see what would be cleaned up before performing real cleanup.
 
 ## Policies
 
-### Tag Number Policy
+### Retain N Tags
 
-Tag number policy specifies how many tags to retain for each repo, and clean other old tags.
+This policy specifies how many tags to retain for each repo, and clean other old tags.
 
 ## How To Use
 
@@ -67,7 +68,7 @@ $ docker run -it --rm \
     harbor-cleaner:latest
 ```
 
-# Supported Version
+## Supported Version
 
 - 1.4.x
 - 1.5.x
