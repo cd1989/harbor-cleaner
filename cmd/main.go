@@ -51,6 +51,9 @@ func main() {
 				imageCount++
 				fmt.Printf("[%s] %s/%s:%s\n", tag.Created.Format("2006-01-02 15:04:05"), repo.Project, repo.Repo, tag.Name)
 			}
+			for digest, tags := range repo.Protected {
+				fmt.Printf("Digest: %s, tags: %v\n", digest, tags)
+			}
 		}
 		fmt.Printf("Total %d repos with %d images are ready for clean\n", len(images), imageCount)
 	} else {

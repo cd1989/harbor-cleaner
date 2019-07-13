@@ -6,12 +6,16 @@ import (
 	"sync"
 	"time"
 
+	"github.com/docker/distribution/manifest/schema1"
+	"github.com/docker/distribution/manifest/schema2"
 	"github.com/goharbor/harbor/src/common/utils"
 	"github.com/sirupsen/logrus"
 
 	"github.com/cd1989/harbor-cleaner/pkg/config"
 	"github.com/cd1989/harbor-cleaner/pkg/harbor"
 )
+
+var acceptMediaTypes = []string{schema1.MediaTypeManifest, schema2.MediaTypeManifest}
 
 type ImageCleaner interface {
 	// Clean images
@@ -47,13 +51,28 @@ func (c *policyClean) Clean() error {
 	logrus.Infof("Start to clean images for %d repo...", len(repoImages))
 	count := 0
 	for _, repo := range repoImages {
+		repoCleaner := NewRepoCleaner(repo, c.client)
+
+		// Protect tags not to be deleted as side effect of other tags' deletion
+		logrus.Infof("Start to protect tags")
+		if err := repoCleaner.Protect(); err != nil {
+			logrus.Error("Failed to protect tags, skip this repo")
+			continue
+		}
+
+		// Delete tags
 		logrus.Infof("Start to clean %d images for repo '%s'...", len(repo.Tags), repo.Repo)
-		for _, tag := range repo.Tags {
-			if err := c.client.DeleteTag(repo.Project, repo.Repo, tag.Name); err != nil {
-				logrus.Warningf("Clean image '%s' error: %v", fmt.Sprintf("%s/%s:%s", repo.Project, repo.Repo, tag), err)
-			} else {
-				count++
-			}
+		n, err := repoCleaner.Clean()
+		if err != nil {
+			logrus.Warningf("Clean tags error: %v", err)
+			continue
+		}
+		count += n
+
+		// Push back tags that are removed as side effect of previous tag deletion
+		if err := repoCleaner.Restore(); err != nil {
+			logrus.Errorf("Restore tags error: %v", err)
+			continue
 		}
 	}
 	logrus.Infof("Totally %d images cleaned", count)
@@ -74,14 +93,15 @@ func (c *policyClean) DryRun() ([]*RepoImages, error) {
 }
 
 type Tag struct {
-	Name    string    `json:"name"`
-	Digest  string    `json:"digest"`
-	Created time.Time `json:"created"`
+	Name    string
+	Digest  string
+	Created time.Time
 }
 type RepoImages struct {
-	Project string `json:"project"`
-	Repo    string `json:"repo"`
-	Tags    []Tag  `json:"tags"`
+	Project   string
+	Repo      string
+	Tags      []Tag
+	Protected map[string][]string
 }
 
 func (c *policyClean) imagesToCleanByNum() ([]*RepoImages, error) {
@@ -107,23 +127,24 @@ func (c *policyClean) imagesToCleanByNum() ([]*RepoImages, error) {
 			remains = append(remains, t)
 		}
 
-		remainsDigests := make(map[string]struct{})
+		remainsDigests := make(map[string][]string)
 		for _, t := range remains {
-			remainsDigests[t.Digest] = struct{}{}
+			remainsDigests[t.Digest] = append(remainsDigests[t.Digest], t.Name)
 		}
 
-		var safeCandidates []Tag
+		dangerTags := make(map[string][]string)
 		for _, t := range candidates {
-			if _, ok := remainsDigests[t.Digest]; !ok {
-				safeCandidates = append(safeCandidates, t)
+			if tags, ok := remainsDigests[t.Digest]; ok {
+				dangerTags[t.Digest] = tags
 			}
 		}
 
-		if len(safeCandidates) > 0 {
+		if len(candidates) > 0 {
 			imagesToClean = append(imagesToClean, &RepoImages{
-				Project: r.Project,
-				Repo:    r.Repo,
-				Tags:    safeCandidates,
+				Project:   r.Project,
+				Repo:      r.Repo,
+				Tags:      candidates,
+				Protected: dangerTags,
 			})
 		}
 	}
