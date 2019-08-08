@@ -28,20 +28,40 @@ func (c *Client) getRepos(projectId int64, query string, page, pageSize int) (in
 		return 0, nil, fmt.Errorf(string(body))
 	}
 
-	repos := make([]*Repo, 0)
-	err = json.Unmarshal(body, &repos)
+	var repos = make([]*Repo, 0)
+	var total int
+	if c.config.Version > "0.4" {
+		err = json.Unmarshal(body, &repos)
+		if err != nil {
+			logrus.Errorf("unmarshal repositories error: %v", err)
+			logrus.Infof("resp body: %s", body)
+			return 0, nil, err
+		}
+		total, err = getTotalFromResp(resp)
+		if err != nil {
+			logrus.Errorf("get total from resp error: %v", err)
+			return 0, nil, err
+		}
+
+		return total, repos, nil
+	}
+
+	var repoNames []string
+	err = json.Unmarshal(body, &repoNames)
 	if err != nil {
 		logrus.Errorf("unmarshal repositories error: %v", err)
 		logrus.Infof("resp body: %s", body)
 		return 0, nil, err
 	}
-	total, err := getTotalFromResp(resp)
-	if err != nil {
-		logrus.Errorf("get total from resp error: %v", err)
-		return 0, nil, err
+	for _, r := range repoNames {
+		repos = append(repos, &Repo{
+			ProjectID: projectId,
+			Name:      r,
+		})
 	}
 
-	return total, repos, nil
+	// TODO: total...
+	return len(repos), repos, nil
 }
 
 func (c *Client) allRepos(projectId int64, query string) (int, []*Repo, error) {

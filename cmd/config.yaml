@@ -1,7 +1,7 @@
 # Host of the Harbor
-host: https://dev.cargo.io
+host: https://192.168.17.98
 # Version of the Harbor, e.g. 1.7, 1.4.0
-version: 1.7
+version: 0.4
 # Admin account
 auth:
   user: admin
@@ -13,6 +13,6 @@ projects: []
 policies:
   # Number policy: to retain the latest N tags for each repo
   numberPolicy:
-    number: 5
+    number: 10
   # Tags that should be retained anyway, '?', '*' supported.
   retainTags: []

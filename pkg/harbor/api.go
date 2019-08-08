@@ -13,6 +13,8 @@ const (
 	APITag           = "/api/repositories/%s/%s/tags/%s"
 	APIImageManifest = "/api/repositories/%s/%s/tags/%s/manifest"
 	APITarget        = "/api/targets/%d"
+	APITagsV04       = "/api/repositories/tags?repo_name=%s"
+	APIDeleteTagV04  = "/api/repositories?repo_name=%s&tag=%s"
 )
 
 func ProjectsPath(page, pageSize int, name, public string) string {
@@ -23,15 +25,24 @@ func ProjectPath(pid int64) string {
 	return fmt.Sprintf(APIProject, pid)
 }
 
-func TagsPath(project, repo string) string {
+func TagsPath(project, repo, version string) string {
+	if version <= "0.4" {
+		return fmt.Sprintf(APITagsV04, fmt.Sprintf("%s/%s", project, repo))
+	}
 	return fmt.Sprintf(APITags, project, repo)
 }
 
-func TagPath(project, repo, tag string) string {
+func TagPath(project, repo, tag, version string) string {
+	if version <= "0.4" {
+		return fmt.Sprintf(APIDeleteTagV04, fmt.Sprintf("%s/%s", project, repo), tag)
+	}
 	return fmt.Sprintf(APITag, project, repo, tag)
 }
 
-func ImageManifestPath(project, repo, tag string) string {
+func ImageManifestPath(project, repo, tag, version string) string {
+	if version <= "0.4" {
+		return fmt.Sprintf("/api/repositories/manifests?repo_name=%s/%s&tag=%s", project, repo, tag)
+	}
 	return fmt.Sprintf(APIImageManifest, project, repo, tag)
 }
 

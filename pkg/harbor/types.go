@@ -66,3 +66,15 @@ type TagLayers struct {
 	MediaType string `json:"mediaType"`
 	Size      int    `json:"size"`
 }
+
+type Config04 struct {
+	Digest string `json:"digest"`
+}
+
+type Manifest struct {
+	Config Config04 `json:"config"`
+}
+
+type Manifest04 struct {
+	Manifest Manifest `json:"manifest"`
+}

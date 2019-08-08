@@ -11,6 +11,8 @@ import (
 	"github.com/goharbor/harbor/src/common/utils"
 	"github.com/sirupsen/logrus"
 
+	"strings"
+
 	"github.com/cd1989/harbor-cleaner/pkg/config"
 	"github.com/cd1989/harbor-cleaner/pkg/harbor"
 )
@@ -133,17 +135,26 @@ func (c *policyClean) imagesToCleanByNum() ([]*RepoImages, error) {
 		}
 
 		dangerTags := make(map[string][]string)
-		for _, t := range candidates {
-			if tags, ok := remainsDigests[t.Digest]; ok {
-				dangerTags[t.Digest] = tags
+		//for _, t := range candidates {
+		//	if tags, ok := remainsDigests[t.Digest]; ok {
+		//		dangerTags[t.Digest] = tags
+		//	}
+		//}
+
+		var filteredCandidates []Tag
+		for _, c := range candidates {
+			if _, ok := remainsDigests[c.Digest]; ok {
+				continue
 			}
+
+			filteredCandidates = append(filteredCandidates, c)
 		}
 
 		if len(candidates) > 0 {
 			imagesToClean = append(imagesToClean, &RepoImages{
 				Project:   r.Project,
 				Repo:      r.Repo,
-				Tags:      candidates,
+				Tags:      filteredCandidates,
 				Protected: dangerTags,
 			})
 		}
@@ -190,6 +201,10 @@ func (c *policyClean) listImages() ([]*RepoImages, error) {
 
 		for _, repo := range repos {
 			p, r := utils.ParseRepository(repo.Name)
+			if !strings.HasPrefix(r, "uat-") && !strings.HasPrefix(r, "qa-") {
+				continue
+			}
+
 			tags, err := c.client.ListTags(p, r)
 			if err != nil {
 				logrus.Errorf("List tags for '%s/%s' error: %v", p, r, err)
