@@ -3,16 +3,17 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/cd1989/harbor-cleaner/pkg/clean"
+	"github.com/cd1989/harbor-cleaner/pkg/cleaner"
 	"github.com/cd1989/harbor-cleaner/pkg/config"
 	"github.com/cd1989/harbor-cleaner/pkg/harbor"
+	_ "github.com/cd1989/harbor-cleaner/pkg/policy/number"
+	_ "github.com/cd1989/harbor-cleaner/pkg/policy/touch"
 )
 
 var configFile *string
@@ -38,28 +39,14 @@ func main() {
 	}
 	harbor.APIClient = client
 
-	cleaner := clean.NewPolicyCleaner(client, config.Config.Projects, &config.Config.Policy)
+	runner := cleaner.NewRunner(client, config.Config)
 	if *dryRun {
-		images, err := cleaner.DryRun()
-		if err != nil {
+		if err := runner.DryRun(); err != nil {
 			logrus.Errorf("Dryrun error: %v", err)
-			return
 		}
-		imageCount := 0
-		for _, repo := range images {
-			for _, tag := range repo.Tags {
-				imageCount++
-				fmt.Printf("[%s] %s/%s:%s\n", tag.Created.Format("2006-01-02 15:04:05"), repo.Project, repo.Repo, tag.Name)
-			}
-			for _, tags := range repo.Protected {
-				fmt.Printf("Repo: %s/%s, tags: %v to protect\n", repo.Project, repo.Repo, tags)
-			}
-		}
-		fmt.Printf("Total %d repos with %d images are ready for clean\n", len(images), imageCount)
 	} else {
-		err := cleaner.Clean()
-		if err != nil {
-			logrus.Errorf("Clean images error: %v", err)
+		if err := runner.Clean(); err != nil {
+			logrus.Errorf("Clean error: %v", err)
 		}
 	}
 }
