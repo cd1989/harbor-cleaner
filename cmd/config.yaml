@@ -15,6 +15,6 @@ policy:
   type: number
   # Number policy: to retain the latest N tags for each repo
   numberPolicy:
-    number: 2
+    number: 5
   # Tags that should be retained anyway, '?', '*' supported.
   retainTags: []
