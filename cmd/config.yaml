@@ -10,7 +10,9 @@ auth:
 # projects, leave it empty.
 projects: []
 # Policy to clean images
-policies:
+policy:
+  # Policy type, e.g. "number", "recentlyNotTouched"
+  type: number
   # Number policy: to retain the latest N tags for each repo
   numberPolicy:
     number: 5

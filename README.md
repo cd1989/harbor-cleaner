@@ -25,7 +25,7 @@ $ make image VERSION=latest
 You can also pull one from DockerHub.
 
 ```bash
-$ docker pull k8sdevops/harbor-cleaner:v0.0.4
+$ docker pull k8sdevops/harbor-cleaner:v0.1.0
 ```
 
 ### Configure
@@ -43,13 +43,14 @@ auth:
 # projects, leave it empty.
 projects: []
 # Policy to clean images
-policies:
+policy:
+  # Policy type, e.g. "number", "recentlyNotTouched"
+  type: number
   # Number policy: to retain the latest N tags for each repo
   numberPolicy:
     number: 5
   # Tags that should be retained anyway, '?', '*' supported.
   retainTags: []
-
 ```
 
 ### DryRun
