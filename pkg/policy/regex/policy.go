@@ -3,7 +3,6 @@ package regex
 import (
 	"fmt"
 	"regexp"
-
 	"strings"
 
 	"github.com/cd1989/harbor-cleaner/pkg/config"
