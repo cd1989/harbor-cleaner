@@ -13,15 +13,16 @@ func init() {
 func newFactory() func(cfg config.C) policy.Processor {
 	return func(cfg config.C) policy.Processor {
 		return &touchPolicyProcessor{
-			client: harbor.APIClient,
-			cfg:    cfg,
+			BaseProcessor: policy.BaseProcessor{
+				Client: harbor.APIClient,
+				Cfg:    cfg,
+			},
 		}
 	}
 }
 
 type touchPolicyProcessor struct {
-	cfg    config.C
-	client *harbor.Client
+	policy.BaseProcessor
 }
 
 // Ensure (*numberPolicyProcessor) implements interface Processor
@@ -29,15 +30,10 @@ var _ policy.Processor = (*touchPolicyProcessor)(nil)
 
 // GetPolicyType gets policy type.
 func (p *touchPolicyProcessor) GetPolicyType() policy.Type {
-	return policy.NumberLimitPolicy
+	return policy.RecentlyNotTouchedPolicy
 }
 
 // ListCandidates list all candidates to be remove based on the policy
 func (p *touchPolicyProcessor) ListCandidates() ([]*policy.Candidate, error) {
-	return nil, nil
-}
-
-// ListTags lists all tags
-func (p *touchPolicyProcessor) ListTags() ([]*policy.RepoTags, error) {
 	return nil, nil
 }

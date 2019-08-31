@@ -2,10 +2,6 @@ package number
 
 import (
 	"fmt"
-	"path"
-
-	"github.com/goharbor/harbor/src/common/utils"
-	"github.com/sirupsen/logrus"
 
 	"github.com/cd1989/harbor-cleaner/pkg/config"
 	"github.com/cd1989/harbor-cleaner/pkg/harbor"
@@ -19,15 +15,16 @@ func init() {
 func newFactory() func(cfg config.C) policy.Processor {
 	return func(cfg config.C) policy.Processor {
 		return &numberPolicyProcessor{
-			client: harbor.APIClient,
-			cfg:    cfg,
+			BaseProcessor: policy.BaseProcessor{
+				Client: harbor.APIClient,
+				Cfg:    cfg,
+			},
 		}
 	}
 }
 
 type numberPolicyProcessor struct {
-	cfg    config.C
-	client *harbor.Client
+	policy.BaseProcessor
 }
 
 // Ensure (*numberPolicyProcessor) implements interface Processor
@@ -45,16 +42,20 @@ func (p *numberPolicyProcessor) ListCandidates() ([]*policy.Candidate, error) {
 		return nil, err
 	}
 
+	if p.Cfg.Policy.NumPolicy == nil {
+		return nil, fmt.Errorf("policy.NumPolicy not configured")
+	}
+
 	var imagesToClean []*policy.Candidate
 	for _, r := range images {
-		if len(r.Tags) <= p.cfg.Policy.NumPolicy.Num {
+		if len(r.Tags) <= p.Cfg.Policy.NumPolicy.Num {
 			continue
 		}
 
 		var candidates []policy.Tag
-		var remains = r.Tags[0:p.cfg.Policy.NumPolicy.Num]
-		for _, t := range r.Tags[p.cfg.Policy.NumPolicy.Num:] {
-			if !retain(p.cfg.Policy.RetainTags, t.Name) {
+		var remains = r.Tags[0:p.Cfg.Policy.NumPolicy.Num]
+		for _, t := range r.Tags[p.Cfg.Policy.NumPolicy.Num:] {
+			if !policy.Retain(p.Cfg.Policy.RetainTags, t.Name) {
 				candidates = append(candidates, t)
 				continue
 			}
@@ -85,73 +86,4 @@ func (p *numberPolicyProcessor) ListCandidates() ([]*policy.Candidate, error) {
 	}
 
 	return imagesToClean, nil
-}
-
-// ListTags lists all tags
-func (p *numberPolicyProcessor) ListTags() ([]*policy.RepoTags, error) {
-	projects, err := p.client.AllProjects("", "")
-	if err != nil {
-		logrus.Errorf("List projects error: %v", err)
-		return nil, err
-	}
-
-	if len(p.cfg.Projects) != 0 {
-		projectsMap := make(map[string]*harbor.Project)
-		for _, p := range projects {
-			projectsMap[p.Name] = p
-		}
-
-		var configuredProjects []*harbor.Project
-		for _, p := range p.cfg.Projects {
-			if pinfo, ok := projectsMap[p]; ok {
-				configuredProjects = append(configuredProjects, pinfo)
-			} else {
-				return nil, fmt.Errorf("project %s not found", p)
-			}
-		}
-		projects = configuredProjects
-	}
-
-	var results []*policy.RepoTags
-	for _, pinfo := range projects {
-		logrus.Infof("Start to collect images for project '%s'", pinfo.Name)
-		repos, err := p.client.ListAllRepositories(pinfo.ProjectID)
-		if err != nil {
-			return nil, fmt.Errorf("list repos for project '%s' error: %v", pinfo.Name, err)
-		}
-
-		for _, repo := range repos {
-			proj, r := utils.ParseRepository(repo.Name)
-			tags, err := p.client.ListTags(proj, r)
-			if err != nil {
-				logrus.Errorf("List tags for '%s/%s' error: %v", proj, r, err)
-				continue
-			}
-
-			var tagsInfo []policy.Tag
-			for _, tag := range tags {
-				tagsInfo = append(tagsInfo, policy.Tag{
-					Name:    tag.Name,
-					Digest:  tag.Digest,
-					Created: tag.Created,
-				})
-			}
-
-			results = append(results, &policy.RepoTags{Project: pinfo.Name, Repo: r, Tags: tagsInfo})
-		}
-	}
-
-	return results, nil
-}
-
-// Check whether to retain the tag against the patterns.
-func retain(patterns []string, tag string) bool {
-	for _, pattern := range patterns {
-		m, e := path.Match(pattern, tag)
-		if e == nil && m {
-			return true
-		}
-	}
-
-	return false
 }

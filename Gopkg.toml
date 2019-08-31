@@ -10,6 +10,10 @@
   name = "gopkg.in/yaml.v2"
   version = "2.2.2"
 
+[[constraint]]
+  name = "github.com/stretchr/testify"
+  version = "1.2.2"
+
 [prune]
   go-tests = true
   unused-packages = true

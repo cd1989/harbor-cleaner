@@ -19,11 +19,21 @@ type NumPolicy struct {
 	Num int `yaml:"number"`
 }
 
+// RegexPolicy removes all images that match the given regex.
+type RegexPolicy struct {
+	// Repos contains list of regex to match repo name
+	Repos []string `yaml:"repos"`
+	/// Tags contains list of regex to match tag name
+	Tags []string `yaml:"tags"`
+}
+
 type Policy struct {
-	// Type of the policy, e.g. "number", "recentlyNotTouched"
+	// Type of the policy, e.g. "number", "regex", "recentlyNotTouched"
 	Type string `yaml:"type"`
-	// RetainNum configure policy to retain given number tags in repo
+	// NumPolicy configures policy to retain given number tags in repo
 	NumPolicy *NumPolicy `yaml:"numberPolicy,omitempty"`
+	// RegexPolicy configures policy to clean images that match the regex patterns
+	RegexPolicy *RegexPolicy `yaml:"regexPolicy,omitempty"`
 	// RetainTags is tag patterns to be retained
 	RetainTags []string `yaml:"retainTags"`
 }
