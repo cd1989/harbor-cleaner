@@ -13,6 +13,7 @@ import (
 	"github.com/cd1989/harbor-cleaner/pkg/config"
 	"github.com/cd1989/harbor-cleaner/pkg/harbor"
 	_ "github.com/cd1989/harbor-cleaner/pkg/policy/number"
+	_ "github.com/cd1989/harbor-cleaner/pkg/policy/regex"
 	_ "github.com/cd1989/harbor-cleaner/pkg/policy/touch"
 )
 
