@@ -49,7 +49,6 @@ func (s *cronScheduler) Submit(task func()) {
 		}()
 
 		logrus.Info("Start to run cleanup task")
-		time.Sleep(time.Minute)
 		task()
 	})
 }
