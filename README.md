@@ -62,7 +62,7 @@ $ make image VERSION=latest
 You can also pull one from DockerHub.
 
 ```bash
-$ docker pull k8sdevops/harbor-cleaner:v0.1.1
+$ docker pull k8sdevops/harbor-cleaner:v0.2.0
 ```
 
 ### Configure
@@ -112,7 +112,7 @@ In the policy part, exact one of `numberPolicy`, `regexPolicy` should be configu
 ```bash
 $ docker run -it --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:latest --dryrun=true
+    k8sdevops/harbor-cleaner:latest --dryrun=true
 ```
 
 ### Clean
@@ -120,7 +120,7 @@ $ docker run -it --rm \
 ```bash
 $ docker run -it --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:latest
+    k8sdevops/harbor-cleaner:latest
 ```
 
 ### Cron Schedule
@@ -139,7 +139,7 @@ trigger:
 ```bash
 $ docker run -d --name=harbor-cleaner --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:latest
+    k8sdevops/harbor-cleaner:latest
 ```
 
 ## Supported Version
