@@ -14,6 +14,10 @@
   name = "github.com/stretchr/testify"
   version = "1.2.2"
 
+[[constraint]]
+  name = "github.com/robfig/cron"
+  version = "v3.0.0"
+
 [prune]
   go-tests = true
   unused-packages = true

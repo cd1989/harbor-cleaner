@@ -7,6 +7,7 @@ Clean images in Harbor by policies.
 - **Delete tags without side effects** As we known when we delete a tag from a repo in docker registry, the underneath manifest is deleted, so are other tags what share the same manifest. In this tool, we protect tags from such situation.
 - **Delete by policies** Support delete tags by configurable policies
 - **Dry run before actual cleanup** To see what would be cleaned up before performing real cleanup.
+- **Cron Schedule** Schedule the cleanup regularly by cron.
 
 ## Concepts
 
@@ -61,7 +62,7 @@ $ make image VERSION=latest
 You can also pull one from DockerHub.
 
 ```bash
-$ docker pull k8sdevops/harbor-cleaner:v0.1.1
+$ docker pull k8sdevops/harbor-cleaner:v0.2.0
 ```
 
 ### Configure
@@ -96,6 +97,12 @@ policy:
 
   # Tags that should be retained anyway, '?', '*' supported.
   retainTags: []
+# Trigger for the cleanup, if you only want to run cleanup once, remove the 'trigger' part or leave
+# the 'trigger.cron' empty
+trigger:
+  # Cron expression to trigger the cleanup, for example "0 0 * * *", leave it empty will disable the
+  # trigger and fallback to run cleanup once.
+  cron:
 ```
 
 In the policy part, exact one of `numberPolicy`, `regexPolicy` should be configured according to the policy type. 
@@ -105,7 +112,7 @@ In the policy part, exact one of `numberPolicy`, `regexPolicy` should be configu
 ```bash
 $ docker run -it --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:latest --dryrun=true
+    k8sdevops/harbor-cleaner:latest --dryrun=true
 ```
 
 ### Clean
@@ -113,7 +120,26 @@ $ docker run -it --rm \
 ```bash
 $ docker run -it --rm \
     -v <your-config-file>:/workspace/config.yaml \
-    harbor-cleaner:latest
+    k8sdevops/harbor-cleaner:latest
+```
+
+### Cron Schedule
+
+Configure the cron trigger and run harbor cleaner container in background.
+
+```yaml
+# Trigger for the cleanup, if you only want to run cleanup once, remove the 'trigger' part or leave
+# the 'trigger.cron' empty
+trigger:
+  # Cron expression to trigger the cleanup, for example "0 0 * * *", leave it empty will disable the
+  # trigger and fallback to run cleanup once.
+  cron: 0 0 * * *
+```
+
+```bash
+$ docker run -d --name=harbor-cleaner --rm \
+    -v <your-config-file>:/workspace/config.yaml \
+    k8sdevops/harbor-cleaner:latest
 ```
 
 ## Supported Version

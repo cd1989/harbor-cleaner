@@ -295,6 +295,14 @@
   revision = "1555304b9b35fdd2b425bccf1a5613677705e7d0"
 
 [[projects]]
+  digest = "1:b778880d47d8544b11cd82b0d9731f9669d653489b400d0b5899b8a20934e7b4"
+  name = "github.com/robfig/cron"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "45fbe1491cdd47d74d1bf1396286d67faee8b8b5"
+  version = "v3.0.0"
+
+[[projects]]
   branch = "master"
   digest = "1:44fbfce27cb96b7d20217634af466093485a3e8132820acbe95949cb64e7fc60"
   name = "github.com/shiena/ansicolor"
@@ -592,6 +600,7 @@
     "github.com/goharbor/harbor/src/common/utils",
     "github.com/goharbor/harbor/src/common/utils/registry",
     "github.com/goharbor/harbor/src/common/utils/registry/auth",
+    "github.com/robfig/cron",
     "github.com/sirupsen/logrus",
     "github.com/stretchr/testify/assert",
     "gopkg.in/yaml.v2",
