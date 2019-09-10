@@ -1,11 +1,11 @@
 package config
 
 import (
-	"io/ioutil"
-
 	"fmt"
+	"io/ioutil"
 	"strings"
 
+	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
@@ -38,12 +38,18 @@ type Policy struct {
 	RetainTags []string `yaml:"retainTags"`
 }
 
+type Trigger struct {
+	// Cron expression to regularly trigger the cleanup
+	Cron string `yaml:"cron"`
+}
+
 type C struct {
 	Host     string   `yaml:"host"`
 	Version  string   `yaml:"version"`
 	Auth     Auth     `yaml:"auth"`
 	Projects []string `yaml:"projects"`
 	Policy   Policy   `yaml:"policy"`
+	Trigger  *Trigger `yaml:"trigger"`
 }
 
 var Config = C{}
@@ -70,10 +76,22 @@ func Load(configFile string) error {
 
 func Normalize(c *C) error {
 	trimed := strings.TrimSpace(c.Version)
+	trimed = strings.TrimPrefix(trimed, "v")
 	if len(trimed) < 3 {
 		return fmt.Errorf("unrecoganized version %s, please provide version like 1.4, 1.7.5", c.Version)
 	}
-
 	c.Version = trimed[:3]
+
+	if HasCronSchedule() {
+		_, err := cron.ParseStandard(c.Trigger.Cron)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
+}
+
+func HasCronSchedule() bool {
+	return Config.Trigger != nil && len(Config.Trigger.Cron) > 0
 }

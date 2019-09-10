@@ -15,6 +15,7 @@ import (
 	_ "github.com/cd1989/harbor-cleaner/pkg/policy/number"
 	_ "github.com/cd1989/harbor-cleaner/pkg/policy/regex"
 	_ "github.com/cd1989/harbor-cleaner/pkg/policy/touch"
+	"github.com/cd1989/harbor-cleaner/pkg/trigger"
 )
 
 var configFile *string
@@ -40,6 +41,20 @@ func main() {
 	}
 	harbor.APIClient = client
 
+	if config.HasCronSchedule() {
+		scheduler := trigger.NewCronScheduler(config.Config.Trigger.Cron)
+		scheduler.Submit(func() {
+			RunTask(client)
+		})
+		scheduler.Start()
+		<-ctx.Done()
+	} else {
+		RunTask(client)
+	}
+}
+
+// RunTask starts cleanup task
+func RunTask(client *harbor.Client) {
 	runner := cleaner.NewRunner(client, config.Config)
 	if *dryRun {
 		if err := runner.DryRun(); err != nil {
