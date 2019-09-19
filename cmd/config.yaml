@@ -11,19 +11,27 @@ auth:
 projects: []
 # Policy to clean images
 policy:
-  # Policy type, e.g. "number", "recentlyNotTouched", "regex"
-  type: regex
+  # Policy type, e.g. "number", "regex", "recentlyNotTouched"
+  type: number
 
   # Number policy: to retain the latest N tags for each repo
-  #numberPolicy:
-  #  number: 5
+  # This configure takes effect only when 'policy.type' is set to 'number'
+  numberPolicy:
+    number: 5
 
   # Regex policy: only clean images that match the given repo patterns and tag patterns
+  # This configure takes effect only when 'policy.type' is set to 'regex'
   regexPolicy:
     # Regex to match repos, a repo will be regarded as matched when it matches any regex in the list
     repos: [".*"]
     # Regex to match tags, a tag will be regarded as matched when it matches any regex in the list
     tags: [".*-alpha.*", "dev"]
+
+  # Recently not touched policy: clean images that not touched within the given time period
+  # This configure takes effect only when 'policy.type' is set to 'recentlyNotTouched'
+  notTouchedPolicy:
+    # Time in second that to check for images
+    time: 604800
 
   # Tags that should be retained anyway, '?', '*' supported.
   retainTags: []
