@@ -37,7 +37,7 @@ func (c *Client) ListTags(projectName string, repoName string) ([]*Tag, error) {
 		return tags, nil
 	}
 
-	return nil, fmt.Errorf("%s", body)
+	return nil, fmt.Errorf("%s", string(body))
 }
 
 func (c *Client) DeleteTag(projectName, repoName, tag string) error {

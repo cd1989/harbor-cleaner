@@ -4,6 +4,10 @@ import (
 	"time"
 )
 
+const (
+	AccessOperationDelete = "delete"
+)
+
 // HarborProject holds details of a project.
 type Project struct {
 	ProjectID    int64             `json:"project_id"`
@@ -65,4 +69,12 @@ type TagLayers struct {
 	Digest    string `json:"digest"`
 	MediaType string `json:"mediaType"`
 	Size      int    `json:"size"`
+}
+
+type AccessLog struct {
+	LogID     int64  `json:"log_id"`
+	ProjectID int64  `json:"project_id"`
+	RepoName  string `json:"repo_name"`
+	Tag       string `json:"repo_tag"`
+	Operation string `json:"operation"`
 }

@@ -13,6 +13,7 @@ const (
 	APITag           = "/api/repositories/%s/%s/tags/%s"
 	APIImageManifest = "/api/repositories/%s/%s/tags/%s/manifest"
 	APITarget        = "/api/targets/%d"
+	APIAccessLogs    = "/api/logs"
 )
 
 func ProjectsPath(page, pageSize int, name, public string) string {
@@ -48,4 +49,8 @@ func ReposPath(pid int64, query string, page, pageSize int) string {
 
 func TargetPath(tid int64) string {
 	return fmt.Sprintf(APITarget, tid)
+}
+
+func AccessLogsPath(startTime, endTime int64, operation string, page, pageSize int64) string {
+	return fmt.Sprintf("%s?begin_timestamp=%d&end_timestamp=%d&operation=%s&page=%d&page_size=%d", APIAccessLogs, startTime, endTime, operation, page, pageSize)
 }

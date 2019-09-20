@@ -51,6 +51,15 @@ The above policy config will remove tags from all repos that are 'dev' or contai
 - v1.4.0-alpha.2
 - 1.0-alpha.5
 
+## Recently Not Touched Policy
+
+This policy works depends on Harbor's access log. It collects images that are recently touched (pull, push, delete), and remove all other images that are not touched recently. It takes a time in second to configure the time period.
+
+```yaml
+notTouchedPolicy:
+  time: 604800
+```
+
 ## How To Use
 
 ### Get Image
@@ -81,19 +90,27 @@ auth:
 projects: []
 # Policy to clean images
 policy:
-  # Policy type, e.g. "number", "recentlyNotTouched", "regex"
-  type: regex
+  # Policy type, e.g. "number", "regex", "recentlyNotTouched"
+  type: number
 
   # Number policy: to retain the latest N tags for each repo
-  #numberPolicy:
-  #  number: 5
+  # This configure takes effect only when 'policy.type' is set to 'number'
+  numberPolicy:
+    number: 5
 
   # Regex policy: only clean images that match the given repo patterns and tag patterns
+  # This configure takes effect only when 'policy.type' is set to 'regex'
   regexPolicy:
     # Regex to match repos, a repo will be regarded as matched when it matches any regex in the list
     repos: [".*"]
     # Regex to match tags, a tag will be regarded as matched when it matches any regex in the list
     tags: [".*-alpha.*", "dev"]
+
+  # Recently not touched policy: clean images that not touched within the given time period
+  # This configure takes effect only when 'policy.type' is set to 'recentlyNotTouched'
+  notTouchedPolicy:
+    # Time in second that to check for images
+    time: 604800
 
   # Tags that should be retained anyway, '?', '*' supported.
   retainTags: []
@@ -101,11 +118,11 @@ policy:
 # the 'trigger.cron' empty
 trigger:
   # Cron expression to trigger the cleanup, for example "0 0 * * *", leave it empty will disable the
-  # trigger and fallback to run cleanup once.
+  # trigger and fallback to run cleanup once. Note: you may need to quote the cron expression with double quote
   cron:
 ```
 
-In the policy part, exact one of `numberPolicy`, `regexPolicy` should be configured according to the policy type. 
+In the policy part, exact one of `numberPolicy`, `regexPolicy`, `notTouchedPolicy` should be configured according to the policy type. 
 
 ### DryRun
 

@@ -27,6 +27,12 @@ type RegexPolicy struct {
 	Tags []string `yaml:"tags"`
 }
 
+// NotTouchedPolicy cleans images that are recently not touched within given period
+type NotTouchedPolicy struct {
+	// Time is time period in second.
+	Time int64 `yaml:"time"`
+}
+
 type Policy struct {
 	// Type of the policy, e.g. "number", "regex", "recentlyNotTouched"
 	Type string `yaml:"type"`
@@ -34,6 +40,8 @@ type Policy struct {
 	NumPolicy *NumPolicy `yaml:"numberPolicy,omitempty"`
 	// RegexPolicy configures policy to clean images that match the regex patterns
 	RegexPolicy *RegexPolicy `yaml:"regexPolicy,omitempty"`
+	// TouchPolicy configures policy to clean images that are recently not touched within given period
+	NotTouchedPolicy *NotTouchedPolicy `yaml:"notTouchedPolicy,omitempty"`
 	// RetainTags is tag patterns to be retained
 	RetainTags []string `yaml:"retainTags"`
 }
