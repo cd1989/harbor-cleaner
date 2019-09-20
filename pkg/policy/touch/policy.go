@@ -2,7 +2,6 @@ package touch
 
 import (
 	"fmt"
-
 	"time"
 
 	"github.com/cd1989/harbor-cleaner/pkg/config"
