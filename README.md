@@ -71,7 +71,7 @@ $ make image VERSION=latest
 You can also pull one from DockerHub.
 
 ```bash
-$ docker pull k8sdevops/harbor-cleaner:v0.2.0
+$ docker pull k8sdevops/harbor-cleaner:v0.3.0
 ```
 
 ### Configure
