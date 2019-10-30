@@ -1,3 +1,5 @@
+[中文](./README-CN.md)
+
 # Harbor Cleaner
 
 Clean images in Harbor by policies.
