@@ -170,3 +170,10 @@ $ docker run -d --name=harbor-cleaner --rm \
 - 1.8.x
 
 It may work for other versions, but this is not tested.
+
+## Known Issues
+
+**[Harbor v1.9+] Harbor:'_xsrf' argument missing from POST**
+
+
+Refer to issue [Harbor:'_xsrf' argument missing from POST](https://github.com/cd1989/harbor-cleaner/issues/14) for workaround.
