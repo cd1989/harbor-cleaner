@@ -126,6 +126,13 @@ func LoginAndGetCookies(client *http.Client, conf *config.C) ([]*http.Cookie, er
 		return nil, err
 	}
 
+	if conf.Version >= "1.9" {
+		logrus.Infof("Set XSRF token for login request, Harbor version: %s", conf.Version)
+		if err := SetXSRFToken(client, conf, req); err != nil {
+			return nil, err
+		}
+	}
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

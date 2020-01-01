@@ -51,6 +51,11 @@ type Trigger struct {
 	Cron string `yaml:"cron"`
 }
 
+type XSRF struct {
+	Enabled bool   `yaml:"enabled"`
+	Key     string `yaml:"key"`
+}
+
 type C struct {
 	Host     string   `yaml:"host"`
 	Version  string   `yaml:"version"`
@@ -58,6 +63,7 @@ type C struct {
 	Projects []string `yaml:"projects"`
 	Policy   Policy   `yaml:"policy"`
 	Trigger  *Trigger `yaml:"trigger"`
+	XSRF     XSRF     `yaml:"xsrf"`
 }
 
 var Config = C{}
