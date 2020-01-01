@@ -43,8 +43,8 @@ func LoginUrl(host, version, user, pwd string) string {
 	return fmt.Sprintf("%s/login?principal=%s&password=%s", host, user, pwd)
 }
 
-func SystemInfoURL(host string) string {
-	return fmt.Sprintf("%s/api/systeminfo", host)
+func PingURL(host string) string {
+	return fmt.Sprintf("%s/api/ping", host)
 }
 
 func ReposPath(pid int64, query string, page, pageSize int) string {
