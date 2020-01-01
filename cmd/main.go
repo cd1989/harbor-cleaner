@@ -22,6 +22,8 @@ var configFile *string
 var dryRun *bool
 
 func main() {
+	logrus.SetFormatter(&logrus.TextFormatter{FullTimestamp: true})
+
 	configFile = flag.String("config", "/workspace/config.yaml", "Config file")
 	dryRun = flag.Bool("dryrun", false, "Whether only dry run the clean")
 	if !flag.Parsed() {
