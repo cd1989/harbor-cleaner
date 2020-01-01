@@ -73,7 +73,7 @@ $ make image VERSION=latest
 You can also pull one from DockerHub.
 
 ```bash
-$ docker pull k8sdevops/harbor-cleaner:v0.3.0
+$ docker pull k8sdevops/harbor-cleaner:v0.4.0
 ```
 
 ### Configure
@@ -122,6 +122,12 @@ trigger:
   # Cron expression to trigger the cleanup, for example "0 0 * * *", leave it empty will disable the
   # trigger and fallback to run cleanup once. Note: you may need to quote the cron expression with double quote
   cron:
+# For Harbor version v1.9+, you should configure the XSRF protection. For other version, keep the default values.
+xsrf:
+  # Refer to 'EnableXSRF' in Harbor config file 'common/config/core/app.conf'.
+  enabled: false
+  # Refer to 'XSRFKey' in Harbor config file 'common/config/core/app.conf'.
+  key: T20zVqpLbDDlQGVIiiwDtAAtsm8bSRjHBJSMyejG
 ```
 
 In the policy part, exact one of `numberPolicy`, `regexPolicy`, `notTouchedPolicy` should be configured according to the policy type. 
@@ -168,12 +174,6 @@ $ docker run -d --name=harbor-cleaner --rm \
 - 1.6.x
 - 1.7.x
 - 1.8.x
+- 1.9.x (harbor-cleaner:v0.4.0+)
 
 It may work for other versions, but this is not tested.
-
-## Known Issues
-
-**[Harbor v1.9+] Harbor:'_xsrf' argument missing from POST**
-
-
-Refer to issue [Harbor:'_xsrf' argument missing from POST](https://github.com/cd1989/harbor-cleaner/issues/14) for workaround.
