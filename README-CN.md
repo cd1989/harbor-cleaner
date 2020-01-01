@@ -70,7 +70,7 @@ $ make image VERSION=latest
 也可以从 DockerHub 上拉取一个发布的镜像版本：
 
 ```bash
-$ docker pull k8sdevops/harbor-cleaner:v0.3.0
+$ docker pull k8sdevops/harbor-cleaner:v0.4.0
 ```
 
 ### 配置
@@ -117,6 +117,12 @@ policy:
 trigger:
   # 定时触发 CRON 表达式，例如 "0 0 * * *"。如果不想定期执行，请保留空值。注：配置的 CRON 表达式需要用双引号引起来。
   cron:
+# 对于 Harbor v1.9 以上版本，需要配置 XSRF，对于其他版本直接忽略这部分配置。
+xsrf:
+  # 对用 Harbor 配置文件 'common/config/core/app.conf' 中 'EnableXSRF' 的值。
+  enabled: false
+  # 对应 'common/config/core/app.conf' 中 'XSRFKey' 的值。
+  key: T20zVqpLbDDlQGVIiiwDtAAtsm8bSRjHBJSMyejG
 ```
 
 在清理策略配置部分，只需要根据策略类型配置 `numberPolicy`, `regexPolicy`, `notTouchedPolicy` 其一即可。
@@ -166,5 +172,6 @@ $ docker run -d --name=harbor-cleaner --rm \
 - 1.6.x
 - 1.7.x
 - 1.8.x
+- 1.9.x (harbor-cleaner:v0.4.0+)
 
 其他版本可能也支持，但是没有经过测试。
