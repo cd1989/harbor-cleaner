@@ -15,7 +15,7 @@ import (
 )
 
 func SetXSRFToken(client *http.Client, conf *config.C, targetReq *http.Request) error {
-	req, err := http.NewRequest(http.MethodGet, SystemInfoURL(conf.Host), nil)
+	req, err := http.NewRequest(http.MethodGet, PingURL(conf.Host), nil)
 	if err != nil {
 		logrus.Error(err)
 		return err
@@ -33,7 +33,7 @@ func SetXSRFToken(client *http.Client, conf *config.C, targetReq *http.Request) 
 	}
 
 	if resp.StatusCode != 200 {
-		logrus.Errorf("access system info from Harbor: %s error: %s", conf.Host, b)
+		logrus.Errorf("ping Harbor: %s error: %s", conf.Host, b)
 		return fmt.Errorf("%s", b)
 	}
 
