@@ -116,6 +116,7 @@ policy:
 # 镜像清理触发器，目前支持 CRON 表达式进行定时触发
 trigger:
   # 定时触发 CRON 表达式，例如 "0 0 * * *"。如果不想定期执行，请保留空值。注：配置的 CRON 表达式需要用双引号引起来。
+  # 这里 CRON 的时区由运行 harbor-cleaner 的环境决定，通过容器执行的话（docker run），使用的是 UTC 时间。
   cron:
 # 对于 Harbor v1.9 以上版本，需要配置 XSRF，对于其他版本直接忽略这部分配置。
 xsrf:

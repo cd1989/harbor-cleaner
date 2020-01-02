@@ -120,7 +120,8 @@ policy:
 # the 'trigger.cron' empty
 trigger:
   # Cron expression to trigger the cleanup, for example "0 0 * * *", leave it empty will disable the
-  # trigger and fallback to run cleanup once. Note: you may need to quote the cron expression with double quote
+  # trigger and fallback to run cleanup once. Note: you may need to quote the cron expression with double quote.
+  # Time zone of the cron depends on the running environment, if run in docker container, it's UTC time.
   cron:
 # For Harbor version v1.9+, you should configure the XSRF protection. For other version, keep the default values.
 xsrf:
