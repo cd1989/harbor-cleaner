@@ -15,6 +15,10 @@ import (
 )
 
 func SetXSRFToken(client *http.Client, conf *config.C, targetReq *http.Request) error {
+	if !conf.XSRF.Enabled {
+		return nil
+	}
+
 	req, err := http.NewRequest(http.MethodGet, PingURL(conf.Host), nil)
 	if err != nil {
 		logrus.Error(err)

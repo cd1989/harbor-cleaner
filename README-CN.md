@@ -120,7 +120,7 @@ trigger:
 # 对于 Harbor v1.9 以上版本，需要配置 XSRF，对于其他版本直接忽略这部分配置。
 xsrf:
   # 对用 Harbor 配置文件 'common/config/core/app.conf' 中 'EnableXSRF' 的值。
-  enabled: false
+  enabled: true
   # 对应 'common/config/core/app.conf' 中 'XSRFKey' 的值。
   key: T20zVqpLbDDlQGVIiiwDtAAtsm8bSRjHBJSMyejG
 ```

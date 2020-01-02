@@ -125,7 +125,7 @@ trigger:
 # For Harbor version v1.9+, you should configure the XSRF protection. For other version, keep the default values.
 xsrf:
   # Refer to 'EnableXSRF' in Harbor config file 'common/config/core/app.conf'.
-  enabled: false
+  enabled: true
   # Refer to 'XSRFKey' in Harbor config file 'common/config/core/app.conf'.
   key: T20zVqpLbDDlQGVIiiwDtAAtsm8bSRjHBJSMyejG
 ```
