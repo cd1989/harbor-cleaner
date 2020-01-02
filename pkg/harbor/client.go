@@ -71,6 +71,13 @@ func (c *Client) do(method, relativePath string, body io.Reader) (*http.Response
 		req.AddCookie(c.coockies[i])
 	}
 
+	if c.config.Version >= "1.9" && method != http.MethodGet {
+		logrus.Infof("Set XSRF token for login request, Harbor version: %s", c.config.Version)
+		if err := SetXSRFToken(c.client, c.config, req); err != nil {
+			return nil, err
+		}
+	}
+
 	resp, err := c.client.Do(req)
 	if err != nil {
 		logrus.Errorf("unexpected error: %v", err)

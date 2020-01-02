@@ -39,9 +39,7 @@ func SetXSRFToken(client *http.Client, conf *config.C, targetReq *http.Request) 
 
 	for _, c := range resp.Cookies() {
 		if c.Name == "_xsrf" {
-			logrus.Infof("Cookie _xsrf found: %s", c.Value)
 			if v, ok := GetSecureCookie(conf.XSRF.Key, c.Value); ok {
-				logrus.Infof("Set XSRF token: %s", v)
 				targetReq.Header.Add("X-Xsrftoken", v)
 			}
 		}
