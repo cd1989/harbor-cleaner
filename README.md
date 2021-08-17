@@ -177,4 +177,4 @@ $ docker run -d --name=harbor-cleaner --rm \
 - 1.8.x
 - 1.9.x (harbor-cleaner:v0.4.0+)
 
-It may work for other versions, but this is not tested.
+Harbor 2.x not supported yet.
